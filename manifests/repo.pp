@@ -45,6 +45,13 @@ class zabbix::repo(
       $majorrelease = '5'
       $debian       = 'lenny'
     }
+    default : {
+      notice('Unsupported ubuntu operating system')
+    }
+  }
+
+  if $::operatingsystem == SLES {
+    fail('SLES 11 SP3 only supported if repo is not managed')
   }
 
   case $::operatingsystem {

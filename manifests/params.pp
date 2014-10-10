@@ -72,7 +72,7 @@ class zabbix::params {
   $server_unreachableperiod       = '45'
   $server_unavailabledelay        = '60'
   $server_unreachabledelay        = '15'
-  $server_alertscriptspath        = '${datadir}/zabbix/alertscripts'
+  $server_alertscriptspath        = "${datadir}/zabbix/alertscripts"
   $server_externalscripts         = '/usr/lib/zabbix/externalscripts'
   $server_fpinglocation           = '/usr/sbin/fping'
   $server_fping6location          = '/usr/sbin/fping6'
@@ -84,7 +84,7 @@ class zabbix::params {
   $server_proxydatafrequency      = '1'
   $server_allowroot               = '0'
   $server_include                 = '/etc/zabbix/zabbix_server.conf.d'
-  $server_loadmodulepath          = '${libdir}/modules'
+  $server_loadmodulepath          = "${libdir}/modules"
   $server_loadmodule              = undef
 
   # Agent specific params
@@ -118,7 +118,7 @@ class zabbix::params {
   $agent_include                  = '/etc/zabbix/zabbix_agentd.d'
   $agent_unsafeuserparameters     = '0'
   $agent_userparameter            = undef
-  $agent_loadmodulepath           = '${libdir}/modules'
+  $agent_loadmodulepath           = "${libdir}/modules"
   $agent_loadmodule               = undef
 
   # Proxy specific params
@@ -179,7 +179,7 @@ class zabbix::params {
   $proxy_tmpdir                  = '/tmp'
   $proxy_allowroot               = '0'
   $proxy_include                 = '/etc/zabbix/zabbix_proxy.conf.d'
-  $proxy_loadmodulepath          = '${libdir}/modules'
+  $proxy_loadmodulepath          = "${libdir}/modules"
   $proxy_loadmodule              = undef
 
   # Java Gateway specific params

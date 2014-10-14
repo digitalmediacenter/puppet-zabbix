@@ -50,10 +50,6 @@ class zabbix::repo(
     }
   }
 
-  if $::operatingsystem == SLES {
-    fail('SLES 11 SP3 only supported if repo is not managed')
-  }
-
   case $::operatingsystem {
     'centos','scientific','redhat','oraclelinux' : {
       yumrepo { 'zabbix':
@@ -111,6 +107,24 @@ class zabbix::repo(
         key_source => 'http://repo.zabbix.com/zabbix-official-repo.key',
       }
     } # END 'ubuntu'
+    # https://github.com/digitalmediacenter/puppet-logstash/blob/master/manifests/repo.pp
+    # http://software.opensuse.org/download.html?project=server%3Amonitoring&package=zabbix
+    # zypprepo modul zum importieren nutzen (siehe intershop install)
+    'SLES' : {
+      if ($::operatingsystemrelease == '11.3') and ($zabbix_version == '2.2') {
+        zypprepo {'server-monitoring':
+          baseurl     => 'http://download.opensuse.org/repositories/server:monitoring/SLE_11_SP3/',
+          gpgkey      => 'http://download.opensuse.org/repositories/server:/monitoring/SLE_11_SP3/repodata/repomd.xml.key',
+          enabled     => 1,
+          autorefresh => 1,
+          name        => 'Server Monitoring Software (SLE_11_SP3)',
+          gpgcheck    => 1,
+          priority    => 99,
+        }
+      } else {
+        fail("Support only for SLES 11 SP3 with zabbix version 2.2, not SLES $::operatingsystemrelease and zabbix $zabbix_version")
+      }
+    } # END 'SLES'
     default : {
       fail('Unrecognized operating system for webserver')
     }

@@ -28,6 +28,18 @@ class zabbix::database::mysql (
     'centos','redhat','oraclelinux' : {
       $zabbix_path = "/usr/share/doc/zabbix-*-mysql-${zabbix_version}*/create"
     }
+    'SLES': {
+      file { '/usr/share/zabbix-proxy-mysql':
+        ensure => 'directory',
+        owner  => 'zabbix',
+        group  => 'zabbix',
+        mode   => '755',
+      }
+      file { '/usr/share/zabbix-proxy-mysql/schema.sql':
+        source => 'puppet:///files/admin/zabbix/schema.sql'
+      }
+      $zabbix_path = '/usr/share/zabbix-*-mysql'
+    }
     default : {
       $zabbix_path = '/usr/share/zabbix-*-mysql'
     }
@@ -45,7 +57,7 @@ class zabbix::database::mysql (
   case $zabbix_type {
     'proxy': {
       exec { 'zabbix_proxy_create.sql':
-        command  => "cd ${zabbix_path} && mysql -u ${db_user} -p${db_pass} -D ${db_name} < schema.sql && touch schema.done",
+        command  => "cd ${zabbix_path} && mysql -u ${db_user} -p${db_pass} -D ${db_name} -h${db_host} < schema.sql && touch schema.done",
         path     => '/bin:/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
         unless   => "test -f ${zabbix_path}/schema.done",
         provider => 'shell',
@@ -84,3 +96,4 @@ class zabbix::database::mysql (
     }
   } # END case $zabbix_type
 }
+

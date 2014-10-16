@@ -209,6 +209,9 @@
 # [*loadmodule*]
 #   Module to load at server startup.
 #
+# [*ensure*]
+#   If a newer version has to be installed, if it is in the repo available.
+#
 # === Example
 #
 #  class { 'zabbix::proxy':
@@ -290,6 +293,7 @@ class zabbix::proxy (
   $include_dir             = $zabbix::params::proxy_include,
   $loadmodulepath          = $zabbix::params::proxy_loadmodulepath,
   $loadmodule              = $zabbix::params::proxy_loadmodule,
+  $ensure                  = $zabbix::params::proxy_ensure,
 ) inherits zabbix::params {
 
   # Check some if they are boolean
@@ -356,18 +360,18 @@ class zabbix::proxy (
   case $::operatingsystem {
     'redhat','centos','oraclelinux' : {
       package { 'zabbix-proxy':
-        ensure  => present,
+        ensure  => $ensure,
         require => Package["zabbix-proxy-${db}"]
       }
       # Installing the packages
       package { "zabbix-proxy-${db}":
-        ensure  => present,
+        ensure  => $ensure,
       }
     } # END 'redhat','centos','oraclelinux'
     default : {
       # Installing the packages
       package { "zabbix-proxy-${db}":
-        ensure  => present,
+        ensure  => $ensure,
       }
     } # END default
   } # END case $::operatingsystem

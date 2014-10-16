@@ -22,6 +22,7 @@ class zabbix::params {
   $manage_resources               = false
 
   # Server specific params
+  $server_ensure                  = 'present'
   $server_api_user                = 'Admin'
   $server_api_pass                = 'zabbix'
   $server_nodeid                  = '0'
@@ -88,6 +89,8 @@ class zabbix::params {
   $server_loadmodule              = undef
 
   # Agent specific params
+  $agent_ensure                   = 'present'
+  $agent_with_sender              = false
   $monitored_by_proxy             = undef
   $agent_use_ip                   = true
   $agent_zbx_group                = 'Linux servers'
@@ -122,6 +125,7 @@ class zabbix::params {
   $agent_loadmodule               = undef
 
   # Proxy specific params
+  $proxy_ensure                  = 'present'
   $proxy_use_ip                  = true
   $proxy_zbx_templates           = [ 'Template App Zabbix Proxy' ]
   $proxy_mode                    = '0'
@@ -187,4 +191,9 @@ class zabbix::params {
   $javagateway_listenip          = '0.0.0.0'
   $javagateway_listenport        = '10052'
   $javagateway_startpollers      = '5'
+
+  if $::operatingssystem == 'SLES' {
+    $proxy_pidfile = '/var/run/zabbixs/zabbix_proxy.pid'
+    $proxy_logfile = '/var/log/zabbixs/zabbix_proxy.log'
+  }
 }

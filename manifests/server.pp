@@ -246,6 +246,9 @@
 # [*loadmodule*]
 #   Module to load at server startup.
 #
+# [*ensure*]
+#   If a newer version has to be installed, if it is in the repo available.
+#
 # === Example
 #
 #  class { 'zabbix::agent':
@@ -335,6 +338,7 @@ class zabbix::server (
   $include_dir             = $zabbix::params::server_include,
   $loadmodulepath          = $zabbix::params::server_loadmodulepath,
   $loadmodule              = $zabbix::params::server_loadmodule,
+  $ensure                  = $zabbix::params::server_ensure,
   ) inherits zabbix::params {
 
   # Check some if they are boolean
@@ -399,7 +403,7 @@ class zabbix::server (
 
   # Installing the packages
   package { "zabbix-server-${db}":
-    ensure  => present,
+    ensure  => $ensure,
   }
 
   case $::operatingsystem {

@@ -133,6 +133,9 @@
 # [*loadmodule*]
 #   Module to load at agent startup.
 #
+# [*ensure*]
+#   If a newer version has to be installed, if it is in the repo available.
+#
 # === Example
 #
 #  Basic installation:
@@ -193,6 +196,8 @@ class zabbix::agent (
   $userparameter        = $zabbix::params::agent_userparameter,
   $loadmodulepath       = $zabbix::params::agent_loadmodulepath,
   $loadmodule           = $zabbix::params::agent_loadmodule,
+  $ensure               = $zabbix::params::agent_ensure,
+  $with_sender          = $zabbix::params::with_sender,
   ) inherits zabbix::params {
 
   # Check some if they are boolean
@@ -247,11 +252,24 @@ class zabbix::agent (
 
   # Installing the package
   package { 'zabbix-agent':
-    ensure  => present,
+    ensure  => $ensure,
+  }
+
+  # Installing the package
+  if $with_sender {
+    package { 'zabbix-sender':
+      ensure  => $ensure,
+    }
   }
 
   # Controlling the 'zabbix-agent' service
-  service { 'zabbix-agent':
+  if $::operatingsystem == 'SLES' {
+    $serviceName = 'zabbix-agentd'
+  } else {
+    $serviceName = 'zabbix-agent'
+  }
+
+  service { $serviceName:
     ensure     => running,
     enable     => true,
     hasstatus  => true,
@@ -265,7 +283,7 @@ class zabbix::agent (
     owner   => 'zabbix',
     group   => 'zabbix',
     mode    => '0644',
-    notify  => Service['zabbix-agent'],
+    notify  => Service[$serviceName],
     require => Package['zabbix-agent'],
     replace => true,
     content => template('zabbix/zabbix_agentd.conf.erb'),

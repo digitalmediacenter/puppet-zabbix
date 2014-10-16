@@ -121,8 +121,15 @@ class zabbix::repo(
           gpgcheck    => 1,
           priority    => 99,
         }
+
+        $gpg_id = 'ee454f98'
+        exec { 'server_monitoring_suse_import_gpg':
+          command => "/bin/rpm --import http://download.opensuse.org/repositories/server:/monitoring/SLE_11_SP3/repodata/repomd.xml.key",
+          unless => "/usr/bin/test $(rpm -qa gpg-pubkey | grep -i \"${gpg_id}\" | wc -l) -eq 1 ",
+          notify => Zypprepo['server-monitoring'],
+        }
       } else {
-        fail("Support only for SLES 11 SP3 with zabbix version 2.2, not SLES $::operatingsystemrelease and zabbix $zabbix_version")
+        fail("Support only for SLES 11.3 with zabbix version 2.2, not SLES $::operatingsystemrelease and zabbix $zabbix_version")
       }
     } # END 'SLES'
     default : {

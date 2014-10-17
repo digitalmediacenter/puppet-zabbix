@@ -128,6 +128,7 @@ class zabbix::repo(
           unless => "/usr/bin/test $(rpm -qa gpg-pubkey | grep -i \"${gpg_id}\" | wc -l) -eq 1 ",
           notify => Zypprepo['server-monitoring'],
         }
+      } elsif ($::operatingsystemrelease == '11.3') and ($zabbix_version == '2.0') {
       } else {
         fail("Support only for SLES 11.3 with zabbix version 2.2, not SLES $::operatingsystemrelease and zabbix $zabbix_version")
       }

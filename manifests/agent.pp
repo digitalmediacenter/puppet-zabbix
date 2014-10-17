@@ -249,6 +249,9 @@ class zabbix::agent (
       }
     }
     Package['zabbix-agent'] {require => Class['zabbix::repo']}
+    if ($with_sender) and ($::operatingsystem  != 'SLES') {
+      Package['zabbix-sender'] {require => Class['zabbix::repo']}
+    }
   }
 
   # Installing the package
@@ -257,7 +260,8 @@ class zabbix::agent (
   }
 
   # Installing the package
-  if $with_sender {
+  # zabbix_sender already included to zabbix_agent in sles
+  if ($with_sender) and ($::operatingsystem != 'SLES') {
     package { 'zabbix-sender':
       ensure  => $ensure,
     }

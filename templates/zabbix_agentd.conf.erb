@@ -66,7 +66,7 @@ LogRemoteCommands=<%= @logremotecommands %>
 # mandatory: yes
 # default:
 # server=
-Server=<%= @server %>
+Server=<% @server.each do |ip| -%><%= ip %>,<% end -%>
 
 ### option: listenport
 #       agent will listen on this port for connections from the server.
@@ -98,8 +98,9 @@ StartAgents=<%= @startagents %>
 #       if this parameter is not specified, active checks are disabled.
 #       example: serveractive=127.0.0.1:20051,zabbix.domain,[::1]:30051,::1,[12fc::1]
 #
-ServerActive=<%= @serveractive %>
-
+<% if @server_port -%>
+ServerActive=<% @server.each do |ip| -%><%= ip %>:<%= @server_port %>,<% end -%>
+<% end -%>
 
 ### option: hostname
 #       unique, case sensitive hostname.
@@ -114,7 +115,9 @@ Hostname=<%= @hostname %>
 #       item used for generating hostname if it is undefined.
 #       ignored if hostname is defined.
 #
+<% if @hostnameitem -%>
 HostnameItem=<%= @hostnameitem %>
+<% end -%>
 
 ### option: hostmetadata
 #	optional parameter that defines host metadata.

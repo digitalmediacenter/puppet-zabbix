@@ -176,6 +176,7 @@ class zabbix::agent (
   $enableremotecommands = $zabbix::params::agent_enableremotecommands,
   $logremotecommands    = $zabbix::params::agent_logremotecommands,
   $server               = $zabbix::params::agent_server,
+  $server_port          = $zabbix::params::agent_server_port,
   $listenport           = $zabbix::params::agent_listenport,
   $listenip             = $zabbix::params::agent_listenip,
   $startagents          = $zabbix::params::agent_startagents,
